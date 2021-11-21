@@ -4,36 +4,41 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CustomerController extends AbstractController
 {
-    #[Route('/customers', name: 'customers')]
+    #[Route('/customers', name: 'customers', methods: ['GET'])]
     public function list(): Response
     {
-        $data = [
-            'customer' => $this->createCustomer(),
-        ];
+        $customers = $this->getDoctrine()->getRepository(Customer::class)->findAll();
 
-        return $this->json($data);
+        if (!$customers) {
+            return $this->json(['success' => false], 404);
+        }
+
+        return $this->json($customers);
     }
 
-    #[Route('/customers', name: 'create')]
-    public function createCustomer(): array
+    #[Route('/customer', name: 'customer')]
+    public function add(Request $request): Response
     {
-        $return = [];
-
         $customer = new Customer;
 
         $customer
-            ->setFirstname('Max')
-            ->setLastname('Mustermann');
+            ->setFirstname($request->request->get('firstname'))
+            ->setLastname($request->request->get('lastname'));
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($customer);
         $entityManager->flush();
 
-        return [];
+        if($customer->getId()){
+            return $this->json($customer, 201);
+        }
+
+        return $this->json([], 400);
     }
 }
