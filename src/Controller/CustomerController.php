@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CustomerController extends AbstractController
 {
@@ -23,22 +25,31 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer', name: 'customer')]
-    public function add(Request $request): Response
+    public function add(Request $request, ValidatorInterface $validator): Response
     {
         $customer = new Customer;
 
         $customer
             ->setFirstname($request->request->get('firstname'))
-            ->setLastname($request->request->get('lastname'));
+            ->setLastname($request->request->get('lastname'))
+            ->setPhone($request->request->get('phone'));
+
+        $errors = $validator->validate($customer);
+
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            /** @var ConstraintViolation $violation */
+            foreach ($errors as $violation) {
+                $errorMessages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
+
+            }
+            return $this->json(['errors' => $errorMessages], 400);
+        }
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($customer);
         $entityManager->flush();
 
-        if($customer->getId()){
-            return $this->json($customer, 201);
-        }
-
-        return $this->json([], 400);
+        return $this->json($customer, 201);
     }
 }
