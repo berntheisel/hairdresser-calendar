@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Customer;
+use App\Entity\Booking;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,31 +10,30 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CustomerController extends AbstractController
+class BookingController extends AbstractController
 {
-    #[Route('/customers', name: 'customers', methods: ['GET'])]
+    #[Route('/bookings', name: 'bookings', methods: ['GET'])]
     public function list(): Response
     {
-        $customers = $this->getDoctrine()->getRepository(Customer::class)->findAll();
+        $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
 
-        if (!$customers) {
+        if (!$bookings) {
             return $this->json(['success' => false], 404);
         }
 
-        return $this->json($customers);
+        return $this->json($bookings);
     }
 
-    #[Route('/customer', name: 'createCustomer', methods: ['POST'])]
-    public function add(Request $request, ValidatorInterface $validator): Response
+    #[Route('/booking', name: 'addBooking', methods: ['POST'])]
+    public function create(Request $request, ValidatorInterface $validator): Response
     {
-        $customer = new Customer;
+        $booking = new Booking();
 
-        $customer
-            ->setFirstname($request->request->get('firstname'))
-            ->setLastname($request->request->get('lastname'))
-            ->setPhone($request->request->get('phone'));
+        $booking
+            ->setStart(new \DateTime($request->request->get('start')))
+            ->setNote($request->request->get('note'));
 
-        $errors = $validator->validate($customer);
+        $errors = $validator->validate($booking);
 
         if (count($errors) > 0) {
             $errorMessages = [];
@@ -47,28 +46,27 @@ class CustomerController extends AbstractController
         }
 
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($customer);
+        $entityManager->persist($booking);
         $entityManager->flush();
 
-        return $this->json($customer, 201);
+        return $this->json($booking, 201);
     }
 
-    #[Route('/customer', name: 'updateCustomer', methods: ['PUT'])]
+    #[Route('/booking', name: 'updateBooking', methods: ['PUT'])]
     public function update(): Response
     {
         return $this->json([
             'message' => 'update',
-            'path' => 'src/Controller/CustomerController.php',
+            'path' => 'src/Controller/BookingController.php',
         ]);
     }
 
-
-    #[Route('/customer', name: 'deleteCustomer', methods: ['DELETE'])]
+    #[Route('/booking', name: 'deleteBooking', methods: ['DELETE'])]
     public function delete(): Response
     {
         return $this->json([
             'message' => 'delete',
-            'path' => 'src/Controller/CustomerController.php',
+            'path' => 'src/Controller/BookingController.php',
         ]);
     }
 }
