@@ -21,7 +21,7 @@ class CustomerController extends AbstractController
             return $this->json(['success' => false], 404);
         }
 
-        return $this->json($customers);
+        return $this->json(['data' => $customers], 201);
     }
 
     #[Route('/customer', name: 'createCustomer', methods: ['POST'])]
@@ -29,10 +29,7 @@ class CustomerController extends AbstractController
     {
         $customer = new Customer;
 
-        $customer
-            ->setFirstname($request->request->get('firstname'))
-            ->setLastname($request->request->get('lastname'))
-            ->setPhone($request->request->get('phone'));
+        $this->setDataToCustomer($request->request->all(), $customer);
 
         $errors = $validator->validate($customer);
 
@@ -50,18 +47,37 @@ class CustomerController extends AbstractController
         $entityManager->persist($customer);
         $entityManager->flush();
 
-        return $this->json($customer, 201);
+        return $this->json(['data' => $customer], 201);
     }
 
-    #[Route('/customer', name: 'updateCustomer', methods: ['PUT'])]
-    public function update(): Response
+    #[Route('/customer/{id}', name: 'updateCustomer', methods: ['PUT'])]
+    public function update(int $id, Request $request, ValidatorInterface $validator): Response
     {
-        return $this->json([
-            'message' => 'update',
-            'path' => 'src/Controller/CustomerController.php',
-        ]);
-    }
+        $customer = $this->getDoctrine()->getRepository(Customer::class)->find($id);
 
+        if (empty($customer)) {
+            return $this->json([], 404);
+        }
+
+        $this->setDataToCustomer($request->request->all(), $customer);
+
+        $errors = $validator->validate($customer);
+
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            /** @var ConstraintViolation $violation */
+            foreach ($errors as $violation) {
+                $errorMessages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
+
+            }
+            return $this->json(['errors' => $errorMessages], 400);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+
+        return $this->json(['data' => $customer], 201);
+    }
 
     #[Route('/customer', name: 'deleteCustomer', methods: ['DELETE'])]
     public function delete(): Response
@@ -70,5 +86,15 @@ class CustomerController extends AbstractController
             'message' => 'delete',
             'path' => 'src/Controller/CustomerController.php',
         ]);
+    }
+
+    private function setDataToCustomer(array $requestData, Customer $customer)
+    {
+        foreach ($requestData as $key => $data) {
+            $methodName = 'set' . ucfirst($key);
+            if (!empty($data) && method_exists($customer, $methodName)) {
+                $customer->{$methodName}($data);
+            }
+        }
     }
 }

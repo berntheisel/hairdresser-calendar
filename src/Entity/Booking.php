@@ -33,6 +33,7 @@ class Booking implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
+            'id' => $this->getId(),
             'start' => $this->getStart(),
             'note' => $this->getNote() ?? '',
         ];
@@ -48,9 +49,9 @@ class Booking implements JsonSerializable
         return $this->start;
     }
 
-    public function setStart(\DateTimeInterface $start): self
+    public function setStart(string $start): self
     {
-        $this->start = $start;
+        $this->start = new \DateTime($start);
 
         return $this;
     }

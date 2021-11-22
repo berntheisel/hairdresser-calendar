@@ -83,6 +83,7 @@ class Customer implements JsonSerializable
      */
 	function jsonSerialize() {
         return [
+            'id' => $this->getId(),
             'firstname' => $this->getFirstname(),
             'lastname' => $this->getLastname()
         ];

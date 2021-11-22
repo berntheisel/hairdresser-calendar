@@ -21,7 +21,7 @@ class BookingController extends AbstractController
             return $this->json(['success' => false], 404);
         }
 
-        return $this->json($bookings);
+        return $this->json(['data' => $bookings], 201);
     }
 
     #[Route('/booking', name: 'addBooking', methods: ['POST'])]
@@ -29,9 +29,7 @@ class BookingController extends AbstractController
     {
         $booking = new Booking();
 
-        $booking
-            ->setStart(new \DateTime($request->request->get('start')))
-            ->setNote($request->request->get('note'));
+        $this->setDataToBooking($request->request->all(), $booking);
 
         $errors = $validator->validate($booking);
 
@@ -49,16 +47,36 @@ class BookingController extends AbstractController
         $entityManager->persist($booking);
         $entityManager->flush();
 
-        return $this->json($booking, 201);
+        return $this->json(['data' => $booking], 201);
     }
 
-    #[Route('/booking', name: 'updateBooking', methods: ['PUT'])]
-    public function update(): Response
+    #[Route('/booking/{id}', name: 'updateBooking', methods: ['PUT'])]
+    public function update(int $id, Request $request, ValidatorInterface $validator): Response
     {
-        return $this->json([
-            'message' => 'update',
-            'path' => 'src/Controller/BookingController.php',
-        ]);
+        $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
+
+        if (empty($booking)) {
+            return $this->json([], 404);
+        }
+
+        $this->setDataToBooking($request->request->all(), $booking);
+
+        $errors = $validator->validate($booking);
+
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            /** @var ConstraintViolation $violation */
+            foreach ($errors as $violation) {
+                $errorMessages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
+
+            }
+            return $this->json(['errors' => $errorMessages], 400);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+
+        return $this->json(['data' => $booking], 201);
     }
 
     #[Route('/booking', name: 'deleteBooking', methods: ['DELETE'])]
@@ -69,4 +87,15 @@ class BookingController extends AbstractController
             'path' => 'src/Controller/BookingController.php',
         ]);
     }
+
+    private function setDataToBooking(array $requestData, Booking $booking)
+    {
+        foreach ($requestData as $key => $data) {
+            $methodName = 'set' . ucfirst($key);
+            if (!empty($data) && method_exists($booking, $methodName)) {
+                $booking->{$methodName}($data);
+            }
+        }
+    }
+
 }
