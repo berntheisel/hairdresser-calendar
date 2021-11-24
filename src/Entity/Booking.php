@@ -30,6 +30,11 @@ class Booking implements JsonSerializable
      */
     private ?string $note;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="bookings")
+     */
+    private $customer;
+
     public function jsonSerialize(): array
     {
         return [
@@ -64,6 +69,18 @@ class Booking implements JsonSerializable
     public function setNote(?string $note): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
 
         return $this;
     }
