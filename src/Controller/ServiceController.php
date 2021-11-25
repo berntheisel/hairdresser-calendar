@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Customer;
+use App\Entity\Service;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,28 +10,28 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CustomerController extends AbstractController
+class ServiceController extends AbstractController
 {
-    #[Route('/customers', name: 'customers', methods: ['GET'])]
+    #[Route('/services', name: 'services', methods: ['GET'])]
     public function list(): Response
     {
-        $customers = $this->getDoctrine()->getRepository(Customer::class)->findAll();
+        $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
 
-        if (!$customers) {
+        if (!$services) {
             return $this->json(['success' => false], 404);
         }
 
-        return $this->json(['data' => $customers], 201);
+        return $this->json(['data' => $services], 201);
     }
 
-    #[Route('/customer', name: 'createCustomer', methods: ['POST'])]
+    #[Route('/service', name: 'createService', methods: ['POST'])]
     public function add(Request $request, ValidatorInterface $validator): Response
     {
-        $customer = new Customer;
+        $service = new Service();
 
-        $this->setDataToCustomer($request->request->all(), $customer);
+        $this->setDataToService($request->request->all(), $service);
 
-        $errors = $validator->validate($customer);
+        $errors = $validator->validate($service);
 
         if (count($errors) > 0) {
             $errorMessages = [];
@@ -43,31 +43,30 @@ class CustomerController extends AbstractController
         }
 
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($customer);
+        $entityManager->persist($service);
         $entityManager->flush();
 
-        return $this->json(['data' => $customer], 201);
+        return $this->json(['data' => $service], 201);
     }
 
-    #[Route('/customer/{id}', name: 'updateCustomer', methods: ['PUT'])]
+    #[Route('/service/{id}', name: 'updateService', methods: ['PUT'])]
     public function update(int $id, Request $request, ValidatorInterface $validator): Response
     {
-        $customer = $this->getDoctrine()->getRepository(Customer::class)->find($id);
+        $service = $this->getDoctrine()->getRepository(Service::class)->find($id);
 
-        if (empty($customer)) {
+        if (empty($service)) {
             return $this->json([], 404);
         }
 
-        $this->setDataToCustomer($request->request->all(), $customer);
+        $this->setDataToService($request->request->all(), $service);
 
-        $errors = $validator->validate($customer);
+        $errors = $validator->validate($service);
 
         if (count($errors) > 0) {
             $errorMessages = [];
             /** @var ConstraintViolation $violation */
             foreach ($errors as $violation) {
                 $errorMessages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
-
             }
             return $this->json(['errors' => $errorMessages], 400);
         }
@@ -75,25 +74,26 @@ class CustomerController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
-        return $this->json(['data' => $customer], 201);
+        return $this->json(['data' => $service], 201);
     }
 
-    #[Route('/customer', name: 'deleteCustomer', methods: ['DELETE'])]
+    #[Route('/service', name: 'deleteService', methods: ['DELETE'])]
     public function delete(): Response
     {
         return $this->json([
             'message' => 'delete',
-            'path' => 'src/Controller/CustomerController.php',
+            'path' => 'src/Controller/ServiceController.php',
         ]);
     }
 
-    private function setDataToCustomer(array $requestData, Customer $customer)
+    private function setDataToService(array $requestData, Service $service)
     {
         foreach ($requestData as $key => $data) {
             $methodName = 'set' . ucfirst($key);
-            if (!empty($data) && method_exists($customer, $methodName)) {
-                $customer->{$methodName}($data);
+            if (!empty($data) && method_exists($service, $methodName)) {
+                $service->{$methodName}($data);
             }
         }
     }
+
 }
