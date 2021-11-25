@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
+use App\Entity\Customer;
+use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +20,15 @@ class BookingController extends AbstractController
         $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
 
         if (!$bookings) {
-            return $this->json(['success' => false], 404);
+            return $this->json([], 404);
         }
 
-        return $this->json(['data' => $bookings], 201);
+        $return = [
+            'data' => $bookings,
+            'links' => '/bookings'
+        ];
+
+        return $this->json($return, 201);
     }
 
     #[Route('/booking', name: 'addBooking', methods: ['POST'])]
@@ -50,6 +57,18 @@ class BookingController extends AbstractController
         return $this->json(['data' => $booking], 201);
     }
 
+    #[Route('/booking/{id}', name: 'readBooking', methods: ['GET'])]
+    public function read(int $id, Request $request): Response
+    {
+        $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
+
+        if (!$booking) {
+            return $this->json([], 400);
+        }
+
+        return $this->json(['data' => $booking], 201);
+    }
+
     #[Route('/booking/{id}', name: 'updateBooking', methods: ['PUT'])]
     public function update(int $id, Request $request, ValidatorInterface $validator): Response
     {
@@ -57,6 +76,18 @@ class BookingController extends AbstractController
 
         if (empty($booking)) {
             return $this->json([], 404);
+        }
+
+        //TODO Lade Temporär Customer
+        $customerId = (int)$request->request->get('customer');
+        if ($customerId) {
+            $customer = $this->getDoctrine()->getRepository(Customer::class)->find($customerId);
+
+            if ($customer) {
+                $request->request->set('customer', $customer);
+            } else {
+                $request->request->remove('customer');
+            }
         }
 
         $this->setDataToBooking($request->request->all(), $booking);
@@ -88,6 +119,7 @@ class BookingController extends AbstractController
         ]);
     }
 
+    //TODO REFACTOR
     private function setDataToBooking(array $requestData, Booking $booking)
     {
         foreach ($requestData as $key => $data) {

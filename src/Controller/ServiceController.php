@@ -18,7 +18,7 @@ class ServiceController extends AbstractController
         $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
 
         if (!$services) {
-            return $this->json(['success' => false], 404);
+            return $this->json([], 404);
         }
 
         return $this->json(['data' => $services], 201);
@@ -45,6 +45,18 @@ class ServiceController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($service);
         $entityManager->flush();
+
+        return $this->json(['data' => $service], 201);
+    }
+
+    #[Route('/service/{id}', name: 'readService', methods: ['GET'])]
+    public function read(int $id): Response
+    {
+        $service = $this->getDoctrine()->getRepository(Service::class)->find($id);
+
+        if (!$service) {
+            return $this->json([], 404);
+        }
 
         return $this->json(['data' => $service], 201);
     }
@@ -86,6 +98,7 @@ class ServiceController extends AbstractController
         ]);
     }
 
+    //TODO REFACTOR
     private function setDataToService(array $requestData, Service $service)
     {
         foreach ($requestData as $key => $data) {

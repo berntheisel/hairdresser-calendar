@@ -18,7 +18,7 @@ class CustomerController extends AbstractController
         $customers = $this->getDoctrine()->getRepository(Customer::class)->findAll();
 
         if (!$customers) {
-            return $this->json(['success' => false], 404);
+            return $this->json([], 404);
         }
 
         return $this->json(['data' => $customers], 201);
@@ -45,6 +45,18 @@ class CustomerController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($customer);
         $entityManager->flush();
+
+        return $this->json(['data' => $customer], 201);
+    }
+
+    #[Route('/customer/{id}', name: 'readCustomer', methods: ['GET'])]
+    public function read(int $id): Response
+    {
+        $customer = $this->getDoctrine()->getRepository(Customer::class)->find($id);
+
+        if (!$customer) {
+            return $this->json([], 404);
+        }
 
         return $this->json(['data' => $customer], 201);
     }

@@ -38,9 +38,14 @@ class Booking implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
+            'type' => 'customer',
             'id' => $this->getId(),
-            'start' => $this->getStart(),
-            'note' => $this->getNote() ?? '',
+            'attributes' => [
+                'start' => $this->getStart(),
+                'note' => $this->getNote() ?? '',
+            ],
+            //TODO ROUTER NUTZEN
+            'links' => '/booking/' . $this->getId()
         ];
     }
 
