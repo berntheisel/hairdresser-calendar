@@ -3,16 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\CustomerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  */
-class Customer implements JsonSerializable
+class Customer
 {
     /**
      * @ORM\Id
@@ -84,22 +82,6 @@ class Customer implements JsonSerializable
      * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="Customer")
      */
     private $bookings;
-
-    public function __construct()
-    {
-        $this->bookings = new ArrayCollection();
-    }
-
-    /**
-     * @return mixed
-     */
-	function jsonSerialize() {
-        return [
-            'id' => $this->getId(),
-            'firstname' => $this->getFirstname(),
-            'lastname' => $this->getLastname()
-        ];
-    }
 
     public function getId(): ?int
     {

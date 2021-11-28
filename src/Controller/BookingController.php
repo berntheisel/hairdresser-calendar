@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\Customer;
-use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +14,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class BookingController extends AbstractController
 {
     #[Route('/bookings', name: 'bookings', methods: ['GET'])]
-    public function list(): Response
+    public function listBookings(): Response
     {
         $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
 
@@ -23,16 +22,11 @@ class BookingController extends AbstractController
             return $this->json([], 404);
         }
 
-        $return = [
-            'data' => $bookings,
-            'links' => '/bookings'
-        ];
-
-        return $this->json($return, 201);
+        return $this->json(['data' => $bookings,], 201);
     }
 
-    #[Route('/booking', name: 'addBooking', methods: ['POST'])]
-    public function create(Request $request, ValidatorInterface $validator): Response
+    #[Route('/booking', name: 'createBooking', methods: ['POST'])]
+    public function createBooking(Request $request, ValidatorInterface $validator): Response
     {
         $booking = new Booking();
 
@@ -58,7 +52,7 @@ class BookingController extends AbstractController
     }
 
     #[Route('/booking/{id}', name: 'readBooking', methods: ['GET'])]
-    public function read(int $id, Request $request): Response
+    public function readBooking(int $id, Request $request): Response
     {
         $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
 
@@ -70,7 +64,7 @@ class BookingController extends AbstractController
     }
 
     #[Route('/booking/{id}', name: 'updateBooking', methods: ['PUT'])]
-    public function update(int $id, Request $request, ValidatorInterface $validator): Response
+    public function updateBooking(int $id, Request $request, ValidatorInterface $validator): Response
     {
         $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
 
@@ -111,7 +105,7 @@ class BookingController extends AbstractController
     }
 
     #[Route('/booking', name: 'deleteBooking', methods: ['DELETE'])]
-    public function delete(): Response
+    public function deleteBooking(): Response
     {
         return $this->json([
             'message' => 'delete',

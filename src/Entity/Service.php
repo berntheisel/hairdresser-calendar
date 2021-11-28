@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ServiceRepository::class)
  */
-class Service implements \JsonSerializable
+class Service
 {
     /**
      * @ORM\Id
@@ -31,16 +31,6 @@ class Service implements \JsonSerializable
      * @ORM\Column(type="float", nullable=true)
      */
     private $price;
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-            'avgDurationInMinutes' => $this->getAvgDurationInMinutes(),
-            'price' => $this->getPrice()
-        ];
-    }
 
     public function getId(): ?int
     {

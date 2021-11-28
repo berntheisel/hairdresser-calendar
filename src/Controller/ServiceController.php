@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ServiceController extends AbstractController
 {
     #[Route('/services', name: 'services', methods: ['GET'])]
-    public function list(): Response
+    public function listServices(): Response
     {
         $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
 
@@ -25,7 +25,7 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/service', name: 'createService', methods: ['POST'])]
-    public function add(Request $request, ValidatorInterface $validator): Response
+    public function createService(Request $request, ValidatorInterface $validator): Response
     {
         $service = new Service();
 
@@ -50,7 +50,7 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/service/{id}', name: 'readService', methods: ['GET'])]
-    public function read(int $id): Response
+    public function readService(int $id): Response
     {
         $service = $this->getDoctrine()->getRepository(Service::class)->find($id);
 
@@ -62,7 +62,7 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/service/{id}', name: 'updateService', methods: ['PUT'])]
-    public function update(int $id, Request $request, ValidatorInterface $validator): Response
+    public function updateService(int $id, Request $request, ValidatorInterface $validator): Response
     {
         $service = $this->getDoctrine()->getRepository(Service::class)->find($id);
 
@@ -90,7 +90,7 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/service', name: 'deleteService', methods: ['DELETE'])]
-    public function delete(): Response
+    public function deleteService(): Response
     {
         return $this->json([
             'message' => 'delete',

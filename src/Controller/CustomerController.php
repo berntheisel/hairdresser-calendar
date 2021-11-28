@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CustomerController extends AbstractController
 {
     #[Route('/customers', name: 'customers', methods: ['GET'])]
-    public function list(): Response
+    public function listCustomers(): Response
     {
         $customers = $this->getDoctrine()->getRepository(Customer::class)->findAll();
 
@@ -25,7 +25,7 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer', name: 'createCustomer', methods: ['POST'])]
-    public function add(Request $request, ValidatorInterface $validator): Response
+    public function createCustomer(Request $request, ValidatorInterface $validator): Response
     {
         $customer = new Customer;
 
@@ -50,7 +50,7 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer/{id}', name: 'readCustomer', methods: ['GET'])]
-    public function read(int $id): Response
+    public function readCustomer(int $id): Response
     {
         $customer = $this->getDoctrine()->getRepository(Customer::class)->find($id);
 
@@ -62,7 +62,7 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer/{id}', name: 'updateCustomer', methods: ['PUT'])]
-    public function update(int $id, Request $request, ValidatorInterface $validator): Response
+    public function updateCustomer(int $id, Request $request, ValidatorInterface $validator): Response
     {
         $customer = $this->getDoctrine()->getRepository(Customer::class)->find($id);
 
@@ -91,7 +91,7 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer', name: 'deleteCustomer', methods: ['DELETE'])]
-    public function delete(): Response
+    public function deleteCustomer(): Response
     {
         return $this->json([
             'message' => 'delete',
