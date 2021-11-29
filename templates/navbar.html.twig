@@ -3,6 +3,7 @@
         <a class="navbar-brand" href="{{ path('dashboard') }}">
             <img src="/images/room_of_hair_logo.png" height="40" alt="">
         </a>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -33,39 +34,33 @@
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="serviceNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dienstleistungen</a>
-                    <ul class="dropdown-menu" aria-labelledby="serviceNavbarDropdown">
-                        <li><a class="dropdown-item" href="{{ path('service_index') }}">Übersicht</a></li>
-                        <li><a class="dropdown-item" href="{{ path('service_new') }}">Hinzufügen</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="employeeNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mitarbeiter</a>
-                    <ul class="dropdown-menu" aria-labelledby="employeeNavbarDropdown">
-                        <li><a class="dropdown-item" href="{{ path('employee_index') }}">Übersicht</a></li>
-                        <li><a class="dropdown-item" href="{{ path('employee_new') }}">Hinzufügen</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('service_index') }}">Dienstleistungen</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="{{ path('employee_index') }}">Mitarbeiter</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
+
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            <div class="d-flex">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                        <ul class="dropdown-menu" aria-labelledby="adminNavbarDropdown">
+                            <li><a class="dropdown-item" href="{{ path('app_register') }}">Neuen Mitarbeiter anlegen</a></li>
+                            <li><a class="dropdown-item" href="{{ path('service_new') }}">Neue Dienstleistungen anlegen</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-danger btn-sm" href="{{ path('app_logout') }}">Abmelden</a>
+                    </li>
+                </ul>
+            </div>
         </div>
+        {%  endif %}
     </div>
 </nav>
