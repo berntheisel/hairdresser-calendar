@@ -3,125 +3,79 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
-use App\Entity\Customer;
+use App\Form\BookingType;
+use App\Repository\BookingRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[Route('/booking')]
 class BookingController extends AbstractController
 {
-    #[Route('/bookings', name: 'bookings', methods: ['GET'])]
-    public function listBookings(): Response
+    #[Route('/', name: 'booking_index', methods: ['GET'])]
+    public function index(BookingRepository $bookingRepository): Response
     {
-        $bookings = $this->getDoctrine()->getRepository(Booking::class)->findAll();
-
-        if (!$bookings) {
-            return $this->json([], 404);
-        }
-
-        return $this->json(['data' => $bookings,], 201);
-    }
-
-    #[Route('/booking', name: 'createBooking', methods: ['POST'])]
-    public function createBooking(Request $request, ValidatorInterface $validator): Response
-    {
-        $booking = new Booking();
-
-        $this->setDataToBooking($request->request->all(), $booking);
-
-        $errors = $validator->validate($booking);
-
-        if (count($errors) > 0) {
-            $errorMessages = [];
-            /** @var ConstraintViolation $violation */
-            foreach ($errors as $violation) {
-                $errorMessages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
-
-            }
-            return $this->json(['errors' => $errorMessages], 400);
-        }
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($booking);
-        $entityManager->flush();
-
-        return $this->json(['data' => $booking], 201);
-    }
-
-    #[Route('/booking/{id}', name: 'readBooking', methods: ['GET'])]
-    public function readBooking(int $id, Request $request): Response
-    {
-        $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
-
-        if (!$booking) {
-            return $this->json([], 400);
-        }
-
-        return $this->json(['data' => $booking], 201);
-    }
-
-    #[Route('/booking/{id}', name: 'updateBooking', methods: ['PUT'])]
-    public function updateBooking(int $id, Request $request, ValidatorInterface $validator): Response
-    {
-        $booking = $this->getDoctrine()->getRepository(Booking::class)->find($id);
-
-        if (empty($booking)) {
-            return $this->json([], 404);
-        }
-
-        //TODO Lade Temporär Customer
-        $customerId = (int)$request->request->get('customer');
-        if ($customerId) {
-            $customer = $this->getDoctrine()->getRepository(Customer::class)->find($customerId);
-
-            if ($customer) {
-                $request->request->set('customer', $customer);
-            } else {
-                $request->request->remove('customer');
-            }
-        }
-
-        $this->setDataToBooking($request->request->all(), $booking);
-
-        $errors = $validator->validate($booking);
-
-        if (count($errors) > 0) {
-            $errorMessages = [];
-            /** @var ConstraintViolation $violation */
-            foreach ($errors as $violation) {
-                $errorMessages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
-
-            }
-            return $this->json(['errors' => $errorMessages], 400);
-        }
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->flush();
-
-        return $this->json(['data' => $booking], 201);
-    }
-
-    #[Route('/booking', name: 'deleteBooking', methods: ['DELETE'])]
-    public function deleteBooking(): Response
-    {
-        return $this->json([
-            'message' => 'delete',
-            'path' => 'src/Controller/BookingController.php',
+        return $this->render('booking/index.html.twig', [
+            'bookings' => $bookingRepository->findAll(),
         ]);
     }
 
-    //TODO REFACTOR
-    private function setDataToBooking(array $requestData, Booking $booking)
+    #[Route('/new', name: 'booking_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        foreach ($requestData as $key => $data) {
-            $methodName = 'set' . ucfirst($key);
-            if (!empty($data) && method_exists($booking, $methodName)) {
-                $booking->{$methodName}($data);
-            }
+        $booking = new Booking();
+        $form = $this->createForm(BookingType::class, $booking);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($booking);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('booking_index', [], Response::HTTP_SEE_OTHER);
         }
+
+        return $this->renderForm('booking/new.html.twig', [
+            'booking' => $booking,
+            'form' => $form,
+        ]);
     }
 
+    #[Route('/{id}', name: 'booking_show', methods: ['GET'])]
+    public function show(Booking $booking): Response
+    {
+        return $this->render('booking/show.html.twig', [
+            'booking' => $booking,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'booking_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(BookingType::class, $booking);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('booking_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('booking/edit.html.twig', [
+            'booking' => $booking,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'booking_delete', methods: ['POST'])]
+    public function delete(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$booking->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($booking);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('booking_index', [], Response::HTTP_SEE_OTHER);
+    }
 }

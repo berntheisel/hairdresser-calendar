@@ -3,109 +3,79 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
+use App\Form\CustomerType;
+use App\Repository\CustomerRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[Route('/customer')]
 class CustomerController extends AbstractController
 {
-    #[Route('/customers', name: 'customers', methods: ['GET'])]
-    public function listCustomers(): Response
+    #[Route('/', name: 'customer_index', methods: ['GET'])]
+    public function index(CustomerRepository $customerRepository): Response
     {
-        $customers = $this->getDoctrine()->getRepository(Customer::class)->findAll();
-
-        if (!$customers) {
-            return $this->json([], 404);
-        }
-
-        return $this->json(['data' => $customers], 201);
-    }
-
-    #[Route('/customer', name: 'createCustomer', methods: ['POST'])]
-    public function createCustomer(Request $request, ValidatorInterface $validator): Response
-    {
-        $customer = new Customer;
-
-        $this->setDataToCustomer($request->request->all(), $customer);
-
-        $errors = $validator->validate($customer);
-
-        if (count($errors) > 0) {
-            $errorMessages = [];
-            /** @var ConstraintViolation $violation */
-            foreach ($errors as $violation) {
-                $errorMessages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
-            }
-            return $this->json(['errors' => $errorMessages], 400);
-        }
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($customer);
-        $entityManager->flush();
-
-        return $this->json(['data' => $customer], 201);
-    }
-
-    #[Route('/customer/{id}', name: 'readCustomer', methods: ['GET'])]
-    public function readCustomer(int $id): Response
-    {
-        $customer = $this->getDoctrine()->getRepository(Customer::class)->find($id);
-
-        if (!$customer) {
-            return $this->json([], 404);
-        }
-
-        return $this->json(['data' => $customer], 201);
-    }
-
-    #[Route('/customer/{id}', name: 'updateCustomer', methods: ['PUT'])]
-    public function updateCustomer(int $id, Request $request, ValidatorInterface $validator): Response
-    {
-        $customer = $this->getDoctrine()->getRepository(Customer::class)->find($id);
-
-        if (empty($customer)) {
-            return $this->json([], 404);
-        }
-
-        $this->setDataToCustomer($request->request->all(), $customer);
-
-        $errors = $validator->validate($customer);
-
-        if (count($errors) > 0) {
-            $errorMessages = [];
-            /** @var ConstraintViolation $violation */
-            foreach ($errors as $violation) {
-                $errorMessages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
-
-            }
-            return $this->json(['errors' => $errorMessages], 400);
-        }
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->flush();
-
-        return $this->json(['data' => $customer], 201);
-    }
-
-    #[Route('/customer', name: 'deleteCustomer', methods: ['DELETE'])]
-    public function deleteCustomer(): Response
-    {
-        return $this->json([
-            'message' => 'delete',
-            'path' => 'src/Controller/CustomerController.php',
+        return $this->render('customer/index.html.twig', [
+            'customers' => $customerRepository->findAll(),
         ]);
     }
 
-    private function setDataToCustomer(array $requestData, Customer $customer)
+    #[Route('/new', name: 'customer_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        foreach ($requestData as $key => $data) {
-            $methodName = 'set' . ucfirst($key);
-            if (!empty($data) && method_exists($customer, $methodName)) {
-                $customer->{$methodName}($data);
-            }
+        $customer = new Customer();
+        $form = $this->createForm(CustomerType::class, $customer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($customer);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('customer_index', [], Response::HTTP_SEE_OTHER);
         }
+
+        return $this->renderForm('customer/new.html.twig', [
+            'customer' => $customer,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'customer_show', methods: ['GET'])]
+    public function show(Customer $customer): Response
+    {
+        return $this->render('customer/show.html.twig', [
+            'customer' => $customer,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'customer_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Customer $customer, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(CustomerType::class, $customer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('customer_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('customer/edit.html.twig', [
+            'customer' => $customer,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'customer_delete', methods: ['POST'])]
+    public function delete(Request $request, Customer $customer, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$customer->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($customer);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('customer_index', [], Response::HTTP_SEE_OTHER);
     }
 }

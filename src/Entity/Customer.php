@@ -83,6 +83,16 @@ class Customer
      */
     private $bookings;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $title;
+
+    public function __toString(): string
+    {
+        return $this->id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -249,4 +259,27 @@ class Customer
 
         return $this;
     }
+
+    public function getTitle(): ?int
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?int $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getFullname(): string
+    {
+        return $this->lastname . ', ' . $this->getFirstname();
+    }
+
+    public function getFullnameWithBirthday(): string
+    {
+        return $this->lastname . ', ' . $this->getFirstname() . '( hier noch bday )';
+    }
+
 }

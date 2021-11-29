@@ -1,0 +1,71 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('home') }}">
+            <img src="/images/room_of_hair_logo.png" height="40" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ path('home') }}">Dashboard</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="bookingNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Termine</a>
+                    <ul class="dropdown-menu" aria-labelledby="bookingNavbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('booking_index') }}">Übersicht</a></li>
+                        <li><a class="dropdown-item" href="{{ path('booking_new') }}">Hinzufügen</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="customerNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kunden</a>
+                    <ul class="dropdown-menu" aria-labelledby="customerNavbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('customer_index') }}">Übersicht</a></li>
+                        <li><a class="dropdown-item" href="{{ path('customer_new') }}">Hinzufügen</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="serviceNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dienstleistungen</a>
+                    <ul class="dropdown-menu" aria-labelledby="serviceNavbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('service_index') }}">Übersicht</a></li>
+                        <li><a class="dropdown-item" href="{{ path('service_new') }}">Hinzufügen</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="employeeNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mitarbeiter</a>
+                    <ul class="dropdown-menu" aria-labelledby="employeeNavbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('employee_index') }}">Übersicht</a></li>
+                        <li><a class="dropdown-item" href="{{ path('employee_new') }}">Hinzufügen</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>

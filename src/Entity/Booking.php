@@ -22,7 +22,7 @@ class Booking
     /**
      * @ORM\Column(type="datetime")
      */
-    private ?DateTime $start;
+    private DateTime $start;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -44,13 +44,9 @@ class Booking
         return $this->start;
     }
 
-    public function setStart(string $start): string
+    public function setStart(DateTime $start): self
     {
-        try {
-            $this->start = new DateTime($start);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
+        $this->start = $start;
 
         return $this;
     }
