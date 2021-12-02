@@ -18,6 +18,7 @@
     {% block javascripts %}
         <!-- Bootstrap Bundle JS -->
         <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('jquery/jquery-3.6.0.min.js') }}"></script>
     {% endblock %}
 </head>
 <body>
@@ -25,9 +26,7 @@
 {% include 'navbar.html.twig' %}
 
 <main class="container">
-
     {% block body %}{% endblock %}
-
 </main>
 </body>
 </html>
