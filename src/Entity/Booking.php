@@ -5,8 +5,6 @@ namespace App\Entity;
 use App\Repository\BookingRepository;
 use DateTime;
 use DateTimeInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,7 +17,7 @@ class Booking
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="datetime")
@@ -30,6 +28,12 @@ class Booking
      * @ORM\Column(type="text", nullable=true)
      */
     private ?string $note;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="bookings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $customer;
 
     public function getId(): ?int
     {
@@ -56,6 +60,18 @@ class Booking
     public function setNote(?string $note): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
 
         return $this;
     }
