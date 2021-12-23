@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Customer index{% endblock %}
+
+{% block body %}
+    <h1>Termine</h1>
+
+    <a class="btn btn-success btn-sm" href="{{ path('booking_new') }}">Neuer Termin</a>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Start</th>
+            <th>Note</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.id }}</td>
+                <td>{{ booking.start ? booking.start|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.note }}</td>
+                <td>
+                    <a class="btn btn-warning btn-sm" href="{{ path('booking_edit', {'id': booking.id}) }}"><i class="fas fa-edit"></i> Bearbeiten</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

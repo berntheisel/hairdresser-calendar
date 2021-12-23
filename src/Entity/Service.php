@@ -25,7 +25,7 @@ class Service
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $avg_duration_in_minutes;
+    private $avgDurationInMinutes;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -51,12 +51,12 @@ class Service
 
     public function getAvgDurationInMinutes(): ?int
     {
-        return $this->avg_duration_in_minutes;
+        return $this->avgDurationInMinutes;
     }
 
-    public function setAvgDurationInMinutes(?int $avg_duration_in_minutes): self
+    public function setAvgDurationInMinutes(?int $avgDurationInMinutes): self
     {
-        $this->avg_duration_in_minutes = $avg_duration_in_minutes;
+        $this->avgDurationInMinutes = $avgDurationInMinutes;
 
         return $this;
     }

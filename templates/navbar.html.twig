@@ -10,49 +10,28 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ path('dashboard') }}">Dashboard</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="bookingNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Termine</a>
-                    <ul class="dropdown-menu" aria-labelledby="bookingNavbarDropdown">
-                        <li><a class="dropdown-item" href="{{ path('booking_index') }}">Übersicht</a></li>
-                        <li><a class="dropdown-item" href="{{ path('booking_new') }}">Hinzufügen</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="customerNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kunden</a>
-                    <ul class="dropdown-menu" aria-labelledby="customerNavbarDropdown">
-                        <li><a class="dropdown-item" href="{{ path('customer_index') }}">Übersicht</a></li>
-                        <li><a class="dropdown-item" href="{{ path('customer_new') }}">Hinzufügen</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
+                    <a class="nav-link active" aria-current="page" href="{{ path('dashboard') }}"><i class="fas fa-bullhorn"></i> Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('service_index') }}">Dienstleistungen</a>
+                    <a class="nav-link" href="{{ path('booking_index') }}"><i class="fas fa-clock"></i> Termine</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('employee_index') }}">Mitarbeiter</a>
+                    <a class="nav-link" href="{{ path('customer_index') }}"><i class="fas fa-users"></i> Kunden</a>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('service_index') }}"><i class="fas fa-cut"></i> Dienstleistungen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('employee_index') }}"><i class="fas fa-grin-alt"></i> Mitarbeiter</a>
+                </li>
             </ul>
             <div class="d-flex">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="adminNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="adminNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-crown"></i> Admin</a>
                         <ul class="dropdown-menu" aria-labelledby="adminNavbarDropdown">
                             <li><a class="dropdown-item" href="{{ path('app_register') }}">Neuen Mitarbeiter anlegen</a></li>
                             <li><a class="dropdown-item" href="{{ path('service_new') }}">Neue Dienstleistungen anlegen</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">

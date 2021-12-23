@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/bookings.js') }}"></script>
+{% endblock %}
+
+{% block title %}Neuer Termin{% endblock %}
+
+{% block body %}
+
+    <h1>Neuer Termin</h1>
+
+    <form method="post">
+
+        <div class="form-group row py-sm-2 mb-0">
+            <label for="booking_customer" class="col-sm-2 col-form-label col-form-label-sm">Kunde</label>
+            <div class="col-sm-4">
+                <select id="booking_customer" name="booking[customer]" class="selectpicker" data-live-search="true" data-size="10" data-width="100%">
+                    {% for customer in customers %}
+                        <option value="{{ customer.id }}">{{ customer.id }} {{ customer.lastname }}, {{ customer.firstname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <label for="booking_start" class="col-sm-2 col-form-label col-form-label-sm">Termin</label>
+            <div class="col-sm-4">
+                <input id="booking_start" name="booking[start]" type="text" value=""/>
+            </div>
+        </div>
+
+        <div class="form-group row py-sm-2 mb-0">
+            <label for="booking_note" class="col-sm-2 col-form-label col-form-label-sm">Notiz</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="booking_note" name="booking[note]" rows="5" placeholder="Information die für den Termin wichtig sein könnten wie z.B. Extensions liegen im Schrank"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group row py-sm-2 mb-0">
+            <label for="booking_note" class="col-sm-2 col-form-label col-form-label-sm">Dienstleistungen</label>
+            <div class="col-sm-10">
+                <button type="button" id="addServiceRow" class="btn btn-warning btn-sm"><i class="fas fa-plus"></i> Dienstleistung hinzufügen</button>
+                <table id="serviceTable" class="table table-striped" style="display: none">
+                    <thead>
+                    <tr>
+                        <th scope="col">Dienstleistung</th>
+                        <th scope="col">Dauer in Minuten</th>
+                        <th scope="col">Druchgeführt von</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="servicesContainer">
+                    <!-- ajax goes here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group row py-sm-2 mb-0">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <button id="createBookingButton" type="submit" name="booking[add_booking]" value="1" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Erstellen</button>
+                <a class="btn btn-danger btn-sm" href="{{ path('booking_index') }}"><i class="fas fa-times"></i> Abbrechen</a>
+            </div>
+        </div>
+
+    </form>
+
+
+    <script>
+        let serviceCatalog = [];
+
+        {% for service in services %}
+        serviceCatalog[{{ service.id }}] = {{ service.avgDurationInMinutes }};
+        {% endfor %}
+
+        $('#addServiceRow').on('click', function (e) {
+            addServiceRow();
+        });
+    </script>
+{% endblock %}

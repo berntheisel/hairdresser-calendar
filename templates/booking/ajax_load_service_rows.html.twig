@@ -1,0 +1,26 @@
+{% for serviceRow in serviceRows %}
+    <tr id="serviceRow_{{ serviceRow.sort }}">
+        <td>
+            <select name="serviceRow[{{ serviceRow.sort }}][service]" id="serviceRowService_{{ serviceRow.sort }}" class="form-select form-select-sm" data-service-counter="{{ serviceRow.sort }}" onchange="changeService(this)" required>
+                <option value="">Bitte auswhählen</option>
+                {% for service in services %}
+                    <option value="{{ service.id }}" {% if serviceRow.service.id == service.id %} selected {% endif %}>{{ service.name }}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td>
+            <input type="text" name="serviceRow[{{ serviceRow.sort }}][durationInMinutes]" id="serviceRowDurationInMinutes_{{ serviceRow.sort }}" value="{{ serviceRow.durationInMinutes }}" class="form-control form-control-sm" placeholder="Dauer in Minuten" required>
+        </td>
+        <td>
+            <select name="serviceRow[{{ serviceRow.sort }}][employee]" id="serviceRowEmployee_{{ serviceRow.sort }}" class="form-select form-select-sm" required>
+                <option value="">Bitte auswhählen</option>
+                {% for employee in employees %}
+                    <option value="{{ employee.id }}" {% if serviceRow.employee.id == employee.id %} selected {% endif %}>{{ employee.firstname }} {{ employee.lastname }}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger btn-sm" onclick="deleteServiceRow({{ serviceRow.sort }})"><i class="fas fa-trash"></i></button>
+        </td>
+    </tr>
+{% endfor %}

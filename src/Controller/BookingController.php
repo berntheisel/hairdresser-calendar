@@ -3,17 +3,60 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
-use App\Form\Booking1Type;
+use App\Entity\BookingsServices;
+use App\Form\BookingType;
 use App\Repository\BookingRepository;
+use App\Repository\BookingsServicesRepository;
+use App\Repository\CustomerRepository;
+use App\Repository\EmployeeRepository;
+use App\Repository\ServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 #[Route('/booking')]
 class BookingController extends AbstractController
 {
+
+    #[Route('/ajax-add-service-row', name: 'ajax_add_service_row', methods: ['POST'])]
+    public function ajaxAddServiceRow(Request $request, ServiceRepository $serviceRepository, EmployeeRepository $employeeRepository)
+    {
+        $serviceCounter = $request->request->get('serviceCounter');
+        $services = $serviceRepository->findAll();
+        $employees = $employeeRepository->findAll();
+
+        return $this->renderForm('booking/ajax_add_service_row.html.twig', [
+            'services' => $services,
+            'employees' => $employees,
+            'serviceCounter' => $serviceCounter
+        ]);
+    }
+
+    #[Route('/{id}/ajax-load-service-rows', name: 'ajax_load_service_rows', methods: ['POST'])]
+    public function ajaxLoadServiceRows(
+        $id,
+        Request $request,
+        BookingsServicesRepository $bookingsServicesRepository,
+        ServiceRepository $serviceRepository,
+        EmployeeRepository $employeeRepository
+    )
+    {
+        $serviceRows = $bookingsServicesRepository->findBy(['booking' => $id]);
+        $services = $serviceRepository->findAll();
+        $employees = $employeeRepository->findAll();
+
+        return $this->renderForm('booking/ajax_load_service_rows.html.twig', [
+            'serviceRows' => $serviceRows,
+            'services' => $services,
+            'employees' => $employees,
+            'service_counter' => count($serviceRows)
+        ]);
+    }
+
+
     #[Route('/', name: 'booking_index', methods: ['GET'])]
     public function index(BookingRepository $bookingRepository): Response
     {
@@ -23,55 +66,127 @@ class BookingController extends AbstractController
     }
 
     #[Route('/new', name: 'booking_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        CustomerRepository     $customerRepository,
+        ServiceRepository      $serviceRepository,
+        EmployeeRepository     $employeeRepository
+    ): Response
     {
         $booking = new Booking();
-        $form = $this->createForm(Booking1Type::class, $booking);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $services = $serviceRepository->findAll();
+        $customers = $customerRepository->findAll();
+
+        if ($request->request->count() && $request->request->get('booking')['add_booking'] === "1") {
+
+            $bookingData = $request->request->get('booking');
+            $servicesDataRows = $request->request->get('serviceRow');
+
+            $customer = $customerRepository->find($bookingData['customer']);
+
+            // Save Booking
+            $booking->setCustomer($customer);
+            #$booking->setStart($bookingData['start']);
+            $start = new \DateTime('now');
+            $booking->setStart($start);
+            $booking->setNote($bookingData['note']);
             $entityManager->persist($booking);
             $entityManager->flush();
 
+            // Save Services
+            $sort = 1;
+            foreach ($servicesDataRows as $servicesDataRow) {
+                $bookingsServices = new BookingsServices();
+
+                $employee = $employeeRepository->find((int)$servicesDataRow['employee']);
+                $service = $serviceRepository->find((int)$servicesDataRow['service']);
+
+                $bookingsServices->setBooking($booking);
+                $bookingsServices->setService($service);
+                $bookingsServices->setEmployee($employee);
+                $bookingsServices->setDurationInMinutes((int)$servicesDataRow['durationInMinutes']);
+                $bookingsServices->setSort($sort);
+                $sort++;
+
+                $entityManager->persist($bookingsServices);
+                $entityManager->flush();
+            }
             return $this->redirectToRoute('booking_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('booking/new.html.twig', [
             'booking' => $booking,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'booking_show', methods: ['GET'])]
-    public function show(Booking $booking): Response
-    {
-        return $this->render('booking/show.html.twig', [
-            'booking' => $booking,
+            'customers' => $customers,
+            'services' => $services,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'booking_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
+    public function edit(
+        $id,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        BookingRepository $bookingRepository,
+        ServiceRepository $serviceRepository,
+        EmployeeRepository $employeeRepository,
+        BookingsServicesRepository $bookingsServicesRepository
+    ): Response
     {
-        $form = $this->createForm(Booking1Type::class, $booking);
-        $form->handleRequest($request);
+        $booking = $bookingRepository->find($id);
+        $services = $serviceRepository->findAll();
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->request->count() && $request->request->get('booking')['edit_booking'] === "1") {
+            $bookingData = $request->request->get('booking');
+            $servicesDataRows = $request->request->get('serviceRow');
+
+            // Save Booking
+            #$booking->setStart($bookingData['start']);
+            $start = new \DateTime('now');
+            $booking->setStart($start);
+            $booking->setNote($bookingData['note']);
+            $entityManager->persist($booking);
             $entityManager->flush();
 
+            // Delete old Services
+            $oldServices = $bookingsServicesRepository->findBy(['booking' => $booking->getId()]);
+            foreach ($oldServices as $oldService){
+                $entityManager->remove($oldService);
+                $entityManager->flush();
+            }
+
+            // Save new Services
+            $sort = 1;
+            foreach ($servicesDataRows as $servicesDataRow) {
+                $bookingsServices = new BookingsServices();
+
+                $employee = $employeeRepository->find((int)$servicesDataRow['employee']);
+                $service = $serviceRepository->find((int)$servicesDataRow['service']);
+
+                $bookingsServices->setBooking($booking);
+                $bookingsServices->setService($service);
+                $bookingsServices->setEmployee($employee);
+                $bookingsServices->setDurationInMinutes((int)$servicesDataRow['durationInMinutes']);
+                $bookingsServices->setSort($sort);
+                $sort++;
+
+                $entityManager->persist($bookingsServices);
+                $entityManager->flush();
+            }
             return $this->redirectToRoute('booking_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('booking/edit.html.twig', [
             'booking' => $booking,
-            'form' => $form,
+            'services' => $services
         ]);
     }
 
     #[Route('/{id}', name: 'booking_delete', methods: ['POST'])]
     public function delete(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$booking->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $booking->getId(), $request->request->get('_token'))) {
             $entityManager->remove($booking);
             $entityManager->flush();
         }

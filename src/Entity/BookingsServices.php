@@ -18,13 +18,13 @@ class BookingsServices
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Booking
+     * @ORM\ManyToOne(targetEntity="Booking")
      * @ORM\JoinColumn(nullable=false)
      */
     private $booking;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $sort;
 
@@ -43,7 +43,55 @@ class BookingsServices
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $duration_in_minutes;
+    private $durationInMinutes;
+
+    /**
+     * @return mixed
+     */
+    public function getBooking()
+    {
+        return $this->booking;
+    }
+
+    /**
+     * @param mixed $booking
+     */
+    public function setBooking($booking): void
+    {
+        $this->booking = $booking;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+    /**
+     * @param mixed $service
+     */
+    public function setService($service): void
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmployee()
+    {
+        return $this->employee;
+    }
+
+    /**
+     * @param mixed $employee
+     */
+    public function setEmployee($employee): void
+    {
+        $this->employee = $employee;
+    }
 
     public function getId(): ?int
     {
@@ -68,19 +116,18 @@ class BookingsServices
 
     /**
      * @return mixed
+     *
      */
     public function getDurationInMinutes()
     {
-        return $this->duration_in_minutes;
+        return $this->durationInMinutes;
     }
 
     /**
-     * @param mixed $duration_in_minutes
+     * @param mixed $durationInMinutes
      */
-    public function setDurationInMinutes($duration_in_minutes): void
+    public function setDurationInMinutes($durationInMinutes): void
     {
-        $this->duration_in_minutes = $duration_in_minutes;
+        $this->durationInMinutes = $durationInMinutes;
     }
-
-
 }
