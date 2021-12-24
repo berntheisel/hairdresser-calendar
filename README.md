@@ -1,2 +1,4 @@
-Beim Termin anlegen/bearbeiten muss noch das datum vom datetimepicker rein
-
+- Termin löschen muss möglich sein
+- Dashboard mit Terminen für den heutigen tag wie hellocash
+- datatables in Terminübersicht zum suchen einbauen
+- 

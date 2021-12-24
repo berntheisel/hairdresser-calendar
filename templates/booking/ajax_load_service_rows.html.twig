@@ -12,10 +12,10 @@
             <input type="text" name="serviceRow[{{ serviceRow.sort }}][durationInMinutes]" id="serviceRowDurationInMinutes_{{ serviceRow.sort }}" value="{{ serviceRow.durationInMinutes }}" class="form-control form-control-sm" placeholder="Dauer in Minuten" required>
         </td>
         <td>
-            <select name="serviceRow[{{ serviceRow.sort }}][employee]" id="serviceRowEmployee_{{ serviceRow.sort }}" class="form-select form-select-sm" required>
+            <select name="serviceRow[{{ serviceRow.sort }}][employee]" id="serviceRowEmployee_{{ serviceRow.sort }}" class="form-select form-select-sm">
                 <option value="">Bitte auswhählen</option>
                 {% for employee in employees %}
-                    <option value="{{ employee.id }}" {% if serviceRow.employee.id == employee.id %} selected {% endif %}>{{ employee.firstname }} {{ employee.lastname }}</option>
+                    <option value="{{ employee.id }}" {% if serviceRow.employee.id is defined and serviceRow.employee.id == employee.id %} selected {% endif %}>{{ employee.firstname }} {{ employee.lastname }}</option>
                 {% endfor %}
             </select>
         </td>

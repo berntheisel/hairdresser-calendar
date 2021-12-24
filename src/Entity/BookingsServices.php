@@ -36,7 +36,7 @@ class BookingsServices
 
     /**
      * @ORM\ManyToOne(targetEntity="Employee")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $employee;
 

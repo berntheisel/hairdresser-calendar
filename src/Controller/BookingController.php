@@ -10,6 +10,7 @@ use App\Repository\BookingsServicesRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\EmployeeRepository;
 use App\Repository\ServiceRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,6 @@ class BookingController extends AbstractController
     #[Route('/{id}/ajax-load-service-rows', name: 'ajax_load_service_rows', methods: ['POST'])]
     public function ajaxLoadServiceRows(
         $id,
-        Request $request,
         BookingsServicesRepository $bookingsServicesRepository,
         ServiceRepository $serviceRepository,
         EmployeeRepository $employeeRepository
@@ -83,14 +83,11 @@ class BookingController extends AbstractController
 
             $bookingData = $request->request->get('booking');
             $servicesDataRows = $request->request->get('serviceRow');
-
             $customer = $customerRepository->find($bookingData['customer']);
 
             // Save Booking
             $booking->setCustomer($customer);
-            #$booking->setStart($bookingData['start']);
-            $start = new \DateTime('now');
-            $booking->setStart($start);
+            $booking->setStart((new DateTime())->setTimestamp(strtotime($bookingData['start'])));
             $booking->setNote($bookingData['note']);
             $entityManager->persist($booking);
             $entityManager->flush();
@@ -142,16 +139,14 @@ class BookingController extends AbstractController
             $servicesDataRows = $request->request->get('serviceRow');
 
             // Save Booking
-            #$booking->setStart($bookingData['start']);
-            $start = new \DateTime('now');
-            $booking->setStart($start);
+            $booking->setStart((new DateTime())->setTimestamp(strtotime($bookingData['start'])));
             $booking->setNote($bookingData['note']);
             $entityManager->persist($booking);
             $entityManager->flush();
 
             // Delete old Services
             $oldServices = $bookingsServicesRepository->findBy(['booking' => $booking->getId()]);
-            foreach ($oldServices as $oldService){
+            foreach ($oldServices as $oldService) {
                 $entityManager->remove($oldService);
                 $entityManager->flush();
             }

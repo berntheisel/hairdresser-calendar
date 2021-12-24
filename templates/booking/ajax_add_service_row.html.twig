@@ -11,7 +11,7 @@
         <input type="text" name="serviceRow[{{ serviceCounter }}][durationInMinutes]" id="serviceRowDurationInMinutes_{{ serviceCounter }}" class="form-control form-control-sm" placeholder="Dauer in Minuten" required>
     </td>
     <td>
-        <select name="serviceRow[{{ serviceCounter }}][employee]" id="serviceRowEmployee_{{ serviceCounter }}" class="form-select form-select-sm" required>
+        <select name="serviceRow[{{ serviceCounter }}][employee]" id="serviceRowEmployee_{{ serviceCounter }}" class="form-select form-select-sm">
             <option value="">Bitte auswhählen</option>
             {% for employee in employees %}
                 <option value="{{ employee.id }}">{{ employee.firstname }} {{ employee.lastname }}</option>

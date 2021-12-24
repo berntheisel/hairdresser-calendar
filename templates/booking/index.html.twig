@@ -9,7 +9,9 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Id</th>
+            <th>Kunde</th>
+            <th>Telefone</th>
+            <th>Mobil</th>
             <th>Start</th>
             <th>Note</th>
             <th>actions</th>
@@ -18,8 +20,10 @@
         <tbody>
         {% for booking in bookings %}
             <tr>
-                <td>{{ booking.id }}</td>
-                <td>{{ booking.start ? booking.start|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.customer.lastname }}, {{ booking.customer.firstname }}</td>
+                <td>{{ booking.customer.phone }}</td>
+                <td>{{ booking.customer.mobile }}</td>
+                <td>{{ booking.start ? booking.start|date('d.m.Y H:i') : '' }}Uhr</td>
                 <td>{{ booking.note }}</td>
                 <td>
                     <a class="btn btn-warning btn-sm" href="{{ path('booking_edit', {'id': booking.id}) }}"><i class="fas fa-edit"></i> Bearbeiten</a>

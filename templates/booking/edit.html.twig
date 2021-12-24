@@ -8,7 +8,6 @@
 {% block title %}new Booking index{% endblock %}
 
 {% block body %}
-
     <h1>Termin bearbeiten</h1>
 
     <form method="post">
@@ -20,7 +19,7 @@
             </div>
             <label for="booking_start" class="col-sm-2 col-form-label col-form-label-sm">Termin</label>
             <div class="col-sm-4">
-                <input id="booking_start" name="booking[start]" type="text" value=""/>
+                <input id="booking_start" name="booking[start]" type="text" class="form-control" value="{{ booking.start|date("d.m.Y H:i") }}"/>
             </div>
         </div>
 
@@ -67,10 +66,91 @@
         serviceCatalog[{{ service.id }}] = {{ service.avgDurationInMinutes }};
         {% endfor %}
 
-        loadServiceRows({{ booking.id }});
+        $(document).ready(function () {
+            loadServiceRows({{ booking.id }});
 
-        $('#addServiceRow').on('click', function (e) {
-            addServiceRow({{ booking.id }});
+            $('#addServiceRow').on('click', function (e) {
+                addServiceRow({{ booking.id }});
+            });
+
+            $("#booking_start").datetimepicker({
+
+                // language
+                // you can find all languages under the locales folder
+                // attribute: data-date-language
+                language: 'de',
+
+                // RTL mode
+                rtl: true,
+
+                // step size
+                // attributes: data-minute-step
+                minuteStep: 5,
+
+                // attributes: data-picker-position
+                pickerPosition: 'bottom-right',
+
+                // enable meridian views for day and hour views
+                // attributes: data-show-meridian
+                showMeridian: false,
+
+                startDate: new Date(),
+
+                // z-index property
+                // attributes: data-z-index
+                zIndex: undefined,
+
+                // initial date
+                initialDate: new Date(),
+
+                // ISO-8601 valid datetime
+                format: "dd.mm.yyyy hh:ii",
+
+                // 0 = Sunday
+                // 6 = Saturday
+                // attributes: data-date-weekstart
+                weekStart: 0,
+
+                // days of the week that should be disabled
+                // 0 = Sunday
+                // 6 = Saturday
+                // attributes: data-date-days-of-week-disabled
+                daysOfWeekDisabled: [],
+
+                // auto close the picker after selection
+                // attributes: data-date-autoclose
+                autoclose: true,
+
+                // 0 or 'hour' for the hour view
+                // 1 or 'day' for the day view
+                // 2 or 'month' for month view (the default)
+                // 3 or 'year' for the 12-month overview
+                // 4 or 'decade' for the 10-year overview.
+                // attributes: data-start-view
+                startView: 2,
+
+                // attributes:data-min-view
+                minView: 0,
+
+                // attributes: data-max-view
+                maxView: 4,
+
+                // select the view from which the date will be selected
+                // 'decade', 'year', 'month', 'day', 'hour'
+                // attributes: data-view-select
+                viewSelect: 0,
+
+                // show Today button
+                // attributes: data-date-today-btn
+                todayBtn: true,
+
+                // highlight the current date
+                todayHighlight: true,
+
+                // whether or not to force parsing of the input value when the picker is closed
+                // attributes: data-date-force-parse
+                forceParse: false,
+            });
         });
     </script>
 {% endblock %}
