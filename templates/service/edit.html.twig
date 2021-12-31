@@ -3,11 +3,25 @@
 {% block title %}Edit Service{% endblock %}
 
 {% block body %}
-    <h1>Edit Service</h1>
+    <h1 class="h3 mb-4 text-gray-800">Dienstleistung bearbeiten</h1>
 
-    {{ include('service/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="d-flex justify-content-between">
+                <h5 class="m-0 font-weight-bold text-primary">Details</h5>
 
-    <a href="{{ path('service_index') }}">back to list</a>
+                <form method="post" action="{{ path('service_delete', {'id': service.id}) }}" onsubmit="return confirm('Dienstleistung wirklich löschen?');">
+                    <button class="btn btn-danger btn-sm btn-icon-split">
+                        <span class="icon text-white-50"><i class="fas fa-trash"></i></span>
+                        <span class="text">Dienstleistung Löschen</span>
+                    </button>
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ service.id) }}">
+                </form>
+            </div>
+        </div>
+        <div class="card-body">
 
-    {{ include('service/_delete_form.html.twig') }}
+            {{ include('service/_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

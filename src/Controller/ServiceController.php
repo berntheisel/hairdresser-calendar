@@ -42,14 +42,6 @@ class ServiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'service_show', methods: ['GET'])]
-    public function show(Service $service): Response
-    {
-        return $this->render('service/show.html.twig', [
-            'service' => $service,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Service $service, EntityManagerInterface $entityManager): Response
     {
