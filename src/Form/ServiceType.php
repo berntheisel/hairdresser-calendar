@@ -14,7 +14,6 @@ class ServiceType extends AbstractType
         $builder
             ->add('name')
             ->add('avg_duration_in_minutes')
-            ->add('price')
         ;
     }
 

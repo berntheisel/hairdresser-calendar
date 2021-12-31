@@ -9,7 +9,20 @@
             </select>
         </td>
         <td>
-            <input type="text" name="serviceRow[{{ serviceRow.sort }}][durationInMinutes]" id="serviceRowDurationInMinutes_{{ serviceRow.sort }}" value="{{ serviceRow.durationInMinutes }}" class="form-control form-control-sm" placeholder="Dauer in Minuten" required>
+            <select name="serviceRow[{{ serviceRow.sort }}][durationInMinutes]" id="serviceRowDurationInMinutes_{{ serviceRow.sort }}" class="form-select form-select-sm" placeholder="Dauer in Minuten" required>
+                <option value="15" {% if serviceRow.durationInMinutes == 15 %} selected {% endif %}>15 Minuten</option>
+                <option value="30" {% if serviceRow.durationInMinutes == 30 %} selected {% endif %}>30 Minuten</option>
+                <option value="45" {% if serviceRow.durationInMinutes == 45 %} selected {% endif %}>45 Minuten</option>
+                <option value="60" {% if serviceRow.durationInMinutes == 60 %} selected {% endif %}>60 Minuten</option>
+                <option value="75" {% if serviceRow.durationInMinutes == 75 %} selected {% endif %}>75 Minuten (1 Stunde 15 Minuten)</option>
+                <option value="90" {% if serviceRow.durationInMinutes == 90 %} selected {% endif %}>90 Minuten (1 Stunde 30 Minuten)</option>
+                <option value="105" {% if serviceRow.durationInMinutes == 105 %} selected {% endif %}>105 Minuten (1 Stunde 45 Minuten)</option>
+                <option value="120" {% if serviceRow.durationInMinutes == 120 %} selected {% endif %}>120 Minuten (2 Stunden)</option>
+                <option value="135" {% if serviceRow.durationInMinutes == 135 %} selected {% endif %}>135 Minuten (2 Stunden 15 Minuten)</option>
+                <option value="150" {% if serviceRow.durationInMinutes == 150 %} selected {% endif %}>150 Minuten (2 Stunden 30 Minuten)</option>
+                <option value="165" {% if serviceRow.durationInMinutes == 165 %} selected {% endif %}>165 Minuten (2 Stunden 45 Minuten)</option>
+                <option value="180" {% if serviceRow.durationInMinutes == 180 %} selected {% endif %}>180 Minuten (3 Stunden)</option>
+            </select>
         </td>
         <td>
             <select name="serviceRow[{{ serviceRow.sort }}][employee]" id="serviceRowEmployee_{{ serviceRow.sort }}" class="form-select form-select-sm">

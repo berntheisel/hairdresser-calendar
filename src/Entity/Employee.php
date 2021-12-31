@@ -32,6 +32,11 @@ class Employee
      */
     private $email;
 
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $color;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class Employee
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
 
         return $this;
     }

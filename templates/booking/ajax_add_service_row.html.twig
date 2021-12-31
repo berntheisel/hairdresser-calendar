@@ -8,7 +8,20 @@
         </select>
     </td>
     <td>
-        <input type="text" name="serviceRow[{{ serviceCounter }}][durationInMinutes]" id="serviceRowDurationInMinutes_{{ serviceCounter }}" class="form-control form-control-sm" placeholder="Dauer in Minuten" required>
+        <select name="serviceRow[{{ serviceCounter }}][durationInMinutes]" id="serviceRowDurationInMinutes_{{ serviceCounter }}" class="form-select form-select-sm" placeholder="Dauer in Minuten" required>
+            <option value="15">15 Minuten</option>
+            <option value="30">30 Minuten</option>
+            <option value="45">45 Minuten</option>
+            <option value="60">60 Minuten</option>
+            <option value="75">75 Minuten (1 Stunde 15 Minuten)</option>
+            <option value="90">90 Minuten (1 Stunde 30 Minuten)</option>
+            <option value="105">105 Minuten (1 Stunde 45 Minuten)</option>
+            <option value="120">120 Minuten (2 Stunden)</option>
+            <option value="135">135 Minuten (2 Stunden 15 Minuten)</option>
+            <option value="150">150 Minuten (2 Stunden 30 Minuten)</option>
+            <option value="165">165 Minuten (2 Stunden 45 Minuten)</option>
+            <option value="180">180 Minuten (3 Stunden)</option>
+        </select>
     </td>
     <td>
         <select name="serviceRow[{{ serviceCounter }}][employee]" id="serviceRowEmployee_{{ serviceCounter }}" class="form-select form-select-sm">

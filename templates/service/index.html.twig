@@ -3,35 +3,48 @@
 {% block title %}Service index{% endblock %}
 
 {% block body %}
-    <h1>Service index</h1>
+    <h1 class="h3 mb-4 text-gray-800">Dienstleistungen</h1>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Avg_duration_in_minutes</th>
-            <th>Price</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for service in services %}
-            <tr>
-                <td>{{ service.id }}</td>
-                <td>{{ service.name }}</td>
-                <td>{{ service.avgDurationInMinutes }}</td>
-                <td>{{ service.price }}</td>
-                <td>
-                    <a href="{{ path('service_show', {'id': service.id}) }}">show</a>
-                    <a href="{{ path('service_edit', {'id': service.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <a href="{{ path('service_new') }}" class="btn btn-success btn-sm btn-icon-split">
+                <span class="icon text-white-50"><i class="fas fa-plus"></i></span>
+                <span class="text">Neue Dienstleistung</span>
+            </a>
+        </div>
+        <div class="card-body">
+            <table class="table" id="dataTable">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Durchschnittliche Dauer in Minuten</th>
+                    <th>Optionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for service in services %}
+                    <tr>
+                        <td>{{ service.name }}</td>
+                        <td>{{ service.avgDurationInMinutes }}</td>
+                        <td>
+                            <a href="{{ path('service_edit', {'id': service.id}) }}" class="btn btn-warning btn-sm btn-icon-split">
+                                <span class="icon text-white-50"><i class="fas fa-edit"></i></span>
+                                <span class="text">Bearbeiten</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+    </script>
 {% endblock %}

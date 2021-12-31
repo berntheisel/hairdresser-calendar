@@ -3,38 +3,56 @@
 {% block title %}Customer index{% endblock %}
 
 {% block body %}
-    <h1>Termine</h1>
+    <h1 class="h3 mb-4 text-gray-800">Termine</h1>
 
-    <a class="btn btn-success btn-sm" href="{{ path('booking_new') }}">Neuer Termin</a>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Kunde</th>
-            <th>Telefone</th>
-            <th>Mobil</th>
-            <th>Start</th>
-            <th>Note</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for booking in bookings %}
-            <tr>
-                <td>{{ booking.customer.lastname }}, {{ booking.customer.firstname }}</td>
-                <td>{{ booking.customer.phone }}</td>
-                <td>{{ booking.customer.mobile }}</td>
-                <td>{{ booking.start ? booking.start|date('d.m.Y H:i') : '' }}Uhr</td>
-                <td>{{ booking.note }}</td>
-                <td>
-                    <a class="btn btn-warning btn-sm" href="{{ path('booking_edit', {'id': booking.id}) }}"><i class="fas fa-edit"></i> Bearbeiten</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <a href="{{ path('booking_new') }}" class="btn btn-success btn-sm btn-icon-split">
+                <span class="icon text-white-50"><i class="fas fa-plus"></i></span>
+                <span class="text">Neuer Termin</span>
+            </a>
+        </div>
+        <div class="card-body">
+            <table class="table" id="dataTable">
+                <thead>
+                <tr>
+                    <th>Kunde</th>
+                    <th>Telefon</th>
+                    <th>Mobil</th>
+                    <th>Terminbeginn</th>
+                    <th>Notiz</th>
+                    <th>Optionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.customer.lastname }}, {{ booking.customer.firstname }}</td>
+                        <td>{{ booking.customer.phone }}</td>
+                        <td>{{ booking.customer.mobile }}</td>
+                        <td>{{ booking.start ? booking.start|date('d.m.Y H:i') : '' }}Uhr</td>
+                        <td>{{ booking.note }}</td>
+                        <td>
+                            <a href="{{ path('booking_edit', {'id': booking.id}) }}" class="btn btn-warning btn-sm btn-icon-split">
+                                <span class="icon text-white-50"><i class="fas fa-edit"></i></span>
+                                <span class="text">Bearbeiten</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+    </script>
 
 {% endblock %}

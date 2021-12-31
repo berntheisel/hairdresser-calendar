@@ -1,45 +1,97 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('dashboard') }}">
-            <img src="/images/room_of_hair_logo.png" height="40" alt="">
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ path('dashboard') }}">
+        <div class="sidebar-brand-icon">
+            <img src="/images/room_of_hair_logo.png" height="170" alt="">
+        </div>
+
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('dashboard') }}"><i class="fas fa-fw fa-tachometer-alt"></i> Dashboard</a>
+    </li>
+
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading"> Interface</div>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('booking_index') }}"><i class="fas fa-clock"></i> Termine</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('customer_index') }}"><i class="fas fa-users"></i> Kunden</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('service_index') }}"><i class="fas fa-cut"></i> Dienstleistungen</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('employee_index') }}"><i class="fas fa-grin-alt"></i> Mitarbeiter</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('config_index') }}"><i class="fas fa-fw fa-cog"></i> Konfiguration</a>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+           aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Utilities</span>
         </a>
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ path('dashboard') }}"><i class="fas fa-bullhorn"></i> Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('booking_index') }}"><i class="fas fa-clock"></i> Termine</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('customer_index') }}"><i class="fas fa-users"></i> Kunden</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('service_index') }}"><i class="fas fa-cut"></i> Dienstleistungen</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('employee_index') }}"><i class="fas fa-grin-alt"></i> Mitarbeiter</a>
-                </li>
-            </ul>
-            <div class="d-flex">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="adminNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-crown"></i> Admin</a>
-                        <ul class="dropdown-menu" aria-labelledby="adminNavbarDropdown">
-                            <li><a class="dropdown-item" href="{{ path('app_register') }}">Neuen Mitarbeiter anlegen</a></li>
-                            <li><a class="dropdown-item" href="{{ path('service_new') }}">Neue Dienstleistungen anlegen</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-danger btn-sm" href="{{ path('app_logout') }}">Abmelden</a>
-                    </li>
-                </ul>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Custom Utilities:</h6>
+                <a class="collapse-item" href="utilities-color.html">Colors</a>
+                <a class="collapse-item" href="utilities-border.html">Borders</a>
+                <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                <a class="collapse-item" href="utilities-other.html">Other</a>
             </div>
         </div>
-        {%  endif %}
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Addons
     </div>
-</nav>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-folder"></i>
+            <span>Pages</span>
+        </a>
+        <div id="collapsePages" class="collapse show" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Login Screens:</h6>
+                <a class="collapse-item" href="login.html">Login</a>
+                <a class="collapse-item" href="register.html">Register</a>
+                <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                <div class="collapse-divider"></div>
+                <h6 class="collapse-header">Other Pages:</h6>
+                <a class="collapse-item" href="404.html">404 Page</a>
+                <a class="collapse-item active" href="blank.html">Blank Page</a>
+            </div>
+        </div>
+    </li>
+
+
+
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+<!-- End of Sidebar -->

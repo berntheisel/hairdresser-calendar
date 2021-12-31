@@ -1,5 +1,85 @@
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block body %}
-<h2>Welcome to HairdresserCalendar</h2>
+    <h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
+
+    <div class="table">
+        <div class="headers">
+            <div class="buttons">
+                <button class="btn-left"><i class="fas fa-chevron-left"></i></button>
+                <button class="btn-right"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="scroller syncscroll" name="myElements">
+                <div class="track time">
+                    <div class="heading">Time</div>
+                </div>
+                {% for employee in employees %}
+                    <div class="track">
+                        <div class="heading">{{ employee.employee_firstname }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="tracks syncscroll" name="myElements">
+            <div class="track time">
+                {% for time in times %}
+                    <div class="entry">
+                        <time>{{ time.time|slice(0, 5) }}</time>
+                    </div>
+                {% endfor %}
+            </div>
+            {% for employee in employees %}
+                <div class="track">
+                    {% for time_slot in employee.time %}
+                        {% if time_slot|length > 0 %}
+                            {% for booking_details in time_slot %}
+                                <div class="entry" style="height: {{ (booking_details.duration_in_minutes/15)*5 }}em">
+                                    <div class="details" style="border-left: 5px solid {{ employee.employee_color }};">
+                                        <h3 style="background: {{ employee.employee_color }}; color: hsl(40, 50%, 30%)">{{ booking_details.customer_name }}</h3>
+                                        <p>{{ booking_details.service_name }} ({{ booking_details.duration_in_minutes }} Min.)</p>
+                                        <p>booking note wenn da</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="entry"></div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div id="top-of-site-pixel-anchor"></div>
+
+
+    <script>
+        const btnR = document.querySelector('.btn-right');
+        const btnL = document.querySelector('.btn-left');
+        const tracks = document.querySelector('.tracks');
+        const tracksW = tracks.scrollWidth;
+
+        btnR.addEventListener('click', _ => {
+            tracks.scrollBy({
+                left: tracksW / 2,
+                behavior: 'smooth'
+            });
+        });
+
+        btnL.addEventListener('click', _ => {
+            tracks.scrollBy({
+                left: -tracksW / 2,
+                behavior: 'smooth'
+            });
+        });
+
+
+        let observer = new IntersectionObserver(entries => {
+            if (!entries[0].isIntersecting) {
+                document.body.classList.add("reveal");
+            } else {
+                document.body.classList.remove("reveal");
+            }
+        });
+        observer.observe(document.querySelector("#top-of-site-pixel-anchor"));
+    </script>
 {% endblock %}

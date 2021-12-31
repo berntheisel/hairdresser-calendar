@@ -27,10 +27,6 @@ class Service
      */
     private $avgDurationInMinutes;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $price;
 
     public function getId(): ?int
     {
@@ -57,18 +53,6 @@ class Service
     public function setAvgDurationInMinutes(?int $avgDurationInMinutes): self
     {
         $this->avgDurationInMinutes = $avgDurationInMinutes;
-
-        return $this;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(?float $price): self
-    {
-        $this->price = $price;
 
         return $this;
     }

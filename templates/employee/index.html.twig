@@ -3,37 +3,55 @@
 {% block title %}Employee index{% endblock %}
 
 {% block body %}
-    <h1>Employee index</h1>
+    <h1 class="h3 mb-4 text-gray-800">Mitarbeiter</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Email</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for employee in employees %}
-            <tr>
-                <td>{{ employee.id }}</td>
-                <td>{{ employee.firstname }}</td>
-                <td>{{ employee.lastname }}</td>
-                <td>{{ employee.email }}</td>
-                <td>
-                    <a href="{{ path('employee_show', {'id': employee.id}) }}">show</a>
-                    <a href="{{ path('employee_edit', {'id': employee.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <a href="{{ path('employee_new') }}" class="btn btn-success btn-sm btn-icon-split">
+                <span class="icon text-white-50"><i class="fas fa-plus"></i></span>
+                <span class="text">Neuer Mitarbeiter</span>
+            </a>
+        </div>
+        <div class="card-body">
+            <table class="table" id="dataTable">
+                <thead>
+                <tr>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>E-Mail</th>
+                    <th>Farbe</th>
+                    <th>Optionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.firstname }}</td>
+                        <td>{{ employee.lastname }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td><span class="btn btn-sm btn-circle" style="background-color: {{ employee.color }}"></span> {{ employee.color }}</td>
+                        <td>
+                            <a href="{{ path('employee_edit', {'id': employee.id}) }}" class="btn btn-warning btn-sm btn-icon-split">
+                                <span class="icon text-white-50"><i class="fas fa-edit"></i></span>
+                                <span class="text">Bearbeiten</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+    </script>
 
     <a href="{{ path('employee_new') }}">Create new</a>
 {% endblock %}

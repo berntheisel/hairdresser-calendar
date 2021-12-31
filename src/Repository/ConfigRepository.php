@@ -2,29 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Customer;
+use App\Entity\Config;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Customer|null find($id, $lockMode = null, $lockVersion = null)
- * @method Customer|null findOneBy(array $criteria, array $orderBy = null)
- * @method Customer[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Config|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Config|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Config[]    findAll()
+ * @method Config[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CustomerRepository extends ServiceEntityRepository
+class ConfigRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Customer::class);
-    }
-
-    public function findAll()
-    {
-        return $this->findBy(array(), array('lastname' => 'ASC', 'firstname' => 'ASC'));
+        parent::__construct($registry, Config::class);
     }
 
     // /**
-    //  * @return Customer[] Returns an array of Customer objects
+    //  * @return Config[] Returns an array of Config objects
     //  */
     /*
     public function findByExampleField($value)
@@ -41,7 +37,7 @@ class CustomerRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Customer
+    public function findOneBySomeField($value): ?Config
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')

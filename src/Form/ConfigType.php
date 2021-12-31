@@ -2,27 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\Employee;
+use App\Entity\Config;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EmployeeType extends AbstractType
+class ConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstname')
-            ->add('lastname')
-            ->add('email')
-            ->add('color')
+            ->add('dayStartTime')
+            ->add('dayEndTime')
+            ->add('minuteSteps')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Employee::class,
+            'data_class' => Config::class,
         ]);
     }
 }
