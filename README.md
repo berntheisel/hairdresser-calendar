@@ -9,6 +9,7 @@
 - Wochenansicht
 - nur aktive mitarbeiter berücksichtigen
 - flash messages
+- sicheres löschen sicherstellen fk
 
 conifg
 - müssen auch im calender so eingestellt werden
