@@ -3,15 +3,14 @@
 {% block title %}Edit Config{% endblock %}
 
 {% block body %}
-
     <h1 class="h3 mb-4 text-gray-800">Konfiguration</h1>
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">Die hier getroffenen Einstellungen wirken sich Systemweit aus</div>
+        <div class="card-header py-3">
+            <h5 class="m-0 font-weight-bold text-primary">Details</h5>
+        </div>
         <div class="card-body">
-            {{ include('config/_form.html.twig') }} <a href="{{ path('dashboard') }}">back to list</a>
+            {{ include('config/_form.html.twig') }}
         </div>
     </div>
-
-
 {% endblock %}
