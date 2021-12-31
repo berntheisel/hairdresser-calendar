@@ -8,6 +8,7 @@
 {% block title %}new Booking index{% endblock %}
 
 {% block body %}
+    {{ dump(config) }}
     <h1 class="h3 mb-4 text-gray-800">Termin bearbeiten</h1>
 
     <div class="card shadow mb-4">
@@ -110,7 +111,7 @@
 
                 // step size
                 // attributes: data-minute-step
-                minuteStep: 15,
+                minuteStep: {{ config.minuteSteps }},
 
                 // attributes: data-picker-position
                 pickerPosition: 'bottom-right',

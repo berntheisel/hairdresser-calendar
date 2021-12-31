@@ -7,6 +7,7 @@ use App\Entity\BookingsServices;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
 use App\Repository\BookingsServicesRepository;
+use App\Repository\ConfigRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\EmployeeRepository;
 use App\Repository\ServiceRepository;
@@ -71,13 +72,15 @@ class BookingController extends AbstractController
         EntityManagerInterface $entityManager,
         CustomerRepository     $customerRepository,
         ServiceRepository      $serviceRepository,
-        EmployeeRepository     $employeeRepository
+        EmployeeRepository     $employeeRepository,
+        ConfigRepository       $configRepository
     ): Response
     {
         $booking = new Booking();
 
         $services = $serviceRepository->findAll();
         $customers = $customerRepository->findAll();
+        $config = $configRepository->find(1);
 
         if ($request->request->count() && $request->request->get('booking')['add_booking'] === "1") {
 
@@ -114,6 +117,7 @@ class BookingController extends AbstractController
         }
 
         return $this->renderForm('booking/new.html.twig', [
+            'config' => $config,
             'booking' => $booking,
             'customers' => $customers,
             'services' => $services,
@@ -128,11 +132,13 @@ class BookingController extends AbstractController
         BookingRepository $bookingRepository,
         ServiceRepository $serviceRepository,
         EmployeeRepository $employeeRepository,
-        BookingsServicesRepository $bookingsServicesRepository
+        BookingsServicesRepository $bookingsServicesRepository,
+        ConfigRepository $configRepository
     ): Response
     {
         $booking = $bookingRepository->find($id);
         $services = $serviceRepository->findAll();
+        $config = $configRepository->find(1);
 
         if ($request->request->count() && $request->request->get('booking')['edit_booking'] === "1") {
             $bookingData = $request->request->get('booking');
@@ -173,6 +179,7 @@ class BookingController extends AbstractController
         }
 
         return $this->renderForm('booking/edit.html.twig', [
+            'config' => $config,
             'booking' => $booking,
             'services' => $services
         ]);
