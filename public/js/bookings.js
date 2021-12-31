@@ -53,6 +53,7 @@ function changeService(element) {
 }
 
 function loadServiceRows(booking_id) {
+    checkServiceCounter();
     $.ajax({
         url: 'ajax-load-service-rows',
         type: 'POST',

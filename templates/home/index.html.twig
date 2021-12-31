@@ -2,7 +2,7 @@
 
 {% block body %}
     <h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
-
+    {{ dump(employees) }}
     <div class="table">
         <div class="headers">
             <div class="buttons">
@@ -33,13 +33,17 @@
                     {% for time_slot in employee.time %}
                         {% if time_slot|length > 0 %}
                             {% for booking_details in time_slot %}
-                                <div class="entry" style="height: {{ (booking_details.duration_in_minutes/15)*5 }}em">
-                                    <div class="details" style="border-left: 5px solid {{ employee.employee_color }};">
-                                        <h3 style="background: {{ employee.employee_color }}; color: hsl(40, 50%, 30%)">{{ booking_details.customer_name }}</h3>
-                                        <p>{{ booking_details.service_name }} ({{ booking_details.duration_in_minutes }} Min.)</p>
-                                        <p>booking note wenn da</p>
+                                <a href="{{ path('booking_edit', {'id': booking_details.booking_id}) }}">
+                                    <div class="entry" style="height: {{ (booking_details.duration_in_minutes/15)*5 }}em">
+                                        <div class="details" style="border-left: 5px solid {{ employee.employee_color }};">
+                                            <h3 style="background: {{ employee.employee_color }}; color: hsl(40, 50%, 30%)">{{ booking_details.customer_name }}</h3>
+                                            <p>{{ booking_details.service_name }} ({{ booking_details.duration_in_minutes }} Min.)</p>
+                                            {% if booking_details.booking_note|length %}
+                                                <p>Notiz: {{ booking_details.booking_note }} </p>
+                                            {% endif %}
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             {% endfor %}
                         {% else %}
                             <div class="entry"></div>

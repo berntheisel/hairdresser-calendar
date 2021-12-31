@@ -158,6 +158,7 @@ class EmployeeRepository extends ServiceEntityRepository
                     $data[$result['employee_id']]['time'][$result['time']][$result['booking_id']] = [
                         'booking_id' => $result['booking_id'],
                         'booking_start' => $result['booking_start'],
+                        'booking_note' => $result['booking_note'],
                         'service_start' => $result['service_start'],
                         'customer_id' => $result['customer_id'],
                         'customer_name' => $result['customer_name'],
