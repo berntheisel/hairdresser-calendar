@@ -1,4 +1,3 @@
-- Termin löschen muss möglich sein
 - alle new item forms und edit forms stylen
 - dashboard tag auswählbar machen
 - menu fixen collapse udn so
@@ -8,7 +7,8 @@
 - Farben für Spezielle Dienstleistungen Pause/Urlaub damit man im Kalender abhebungen hat
 - Urlaub eintragen
 - Wochenansicht
-- nur aktive mitarbeiter berücksichtigen 
+- nur aktive mitarbeiter berücksichtigen
+- flash messages
 
 conifg
 - müssen auch im calender so eingestellt werden

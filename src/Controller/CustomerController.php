@@ -42,14 +42,6 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'customer_show', methods: ['GET'])]
-    public function show(Customer $customer): Response
-    {
-        return $this->render('customer/show.html.twig', [
-            'customer' => $customer,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'customer_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Customer $customer, EntityManagerInterface $entityManager): Response
     {

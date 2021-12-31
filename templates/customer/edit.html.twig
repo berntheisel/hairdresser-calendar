@@ -3,11 +3,25 @@
 {% block title %}Edit Customer{% endblock %}
 
 {% block body %}
-    <h1>Edit Customer</h1>
 
-    {{ include('customer/_form.html.twig', {'button_label': 'Update'}) }}
+    <h1 class="h3 mb-4 text-gray-800">Kunde bearbeiten</h1>
 
-    <a href="{{ path('customer_index') }}">back to list</a>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="d-flex justify-content-between">
+                <h5 class="m-0 font-weight-bold text-primary">Kundendetails</h5>
 
-    {{ include('customer/_delete_form.html.twig') }}
+                <form method="post" action="{{ path('customer_delete', {'id': customer.id}) }}" onsubmit="return confirm('Kunde wirklich löschen?');">
+                    <button class="btn btn-danger btn-sm btn-icon-split">
+                        <span class="icon text-white-50"><i class="fas fa-trash"></i></span>
+                        <span class="text">Kunde Löschen</span>
+                    </button>
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ customer.id) }}">
+                </form>
+            </div>
+        </div>
+        <div class="card-body">
+            {{ include('customer/_form.html.twig', {'button_label': 'Update'}) }}
+        </div>
+    </div>
 {% endblock %}

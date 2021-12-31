@@ -179,9 +179,16 @@ class BookingController extends AbstractController
     }
 
     #[Route('/{id}', name: 'booking_delete', methods: ['POST'])]
-    public function delete(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Booking $booking, BookingsServicesRepository $bookingsServicesRepository, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $booking->getId(), $request->request->get('_token'))) {
+            // Delete services for booking
+            $services = $bookingsServicesRepository->findBy(['booking' => $booking->getId()]);
+            foreach ($services as $service) {
+                $entityManager->remove($service);
+                $entityManager->flush();
+            }
+
             $entityManager->remove($booking);
             $entityManager->flush();
         }
